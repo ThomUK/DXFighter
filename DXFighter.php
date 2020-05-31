@@ -129,6 +129,27 @@ class DXFighter {
   }
 
   /**
+   * Handler for adding new layers to the DXF file
+   * @param Layer $layer
+   */
+  //TODO perhaps abstract this into a more general addBasicObject function?
+  public function addLayer(Layer $layer) {
+
+    // find the tables Section
+    $tablesSection = $this->tables->getItems();
+
+    foreach($tablesSection as $table){
+      //loop through the section to find the layer table
+      if($table->getName() == 'layer'){
+        // add the new layer
+        $table->addEntry($layer);
+      }
+
+    }
+    //dd($tablesSection);
+  }
+
+  /**
    * Handler to add an entity to the DXFighter instance
    * @param $entity
    */
