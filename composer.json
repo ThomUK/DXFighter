@@ -1,16 +1,18 @@
 {
-    "name": "enjoping/dxfighter",
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Joe Pietler",
-            "email": "enjoping@gmail.com"
-        }
-    ],
-    "require": {
+  "name": "ThomUK/dxfighter",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Joe Pietler",
+      "email": "enjoping@gmail.com"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^7",
-        "phpcheckstyle/phpcheckstyle": "^0.14.7"
+    {
+      "name": "Tom Smith"
     }
+  ],
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^7",
+    "phpcheckstyle/phpcheckstyle": "^0.14.7"
+  }
 }

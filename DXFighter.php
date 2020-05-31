@@ -4,6 +4,7 @@
  * Inspired by https://github.com/nycresistor/SDXF/blob/master/sdxf.py
  * Basis by https://github.com/digitalfotografen/DXFwriter
  * Updated to AC1012 by https://github.com/enjoping
+ * Further developed by https://github.com/ThomUK
  *
  * DXF Documentation at http://www.autodesk.com/techpubs/autocad/acad2000/dxf/
  */
