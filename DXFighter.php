@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DXFighter
  * Inspired by https://github.com/nycresistor/SDXF/blob/master/sdxf.py
@@ -33,14 +34,15 @@ use PHPUnit\Framework\Exception;
  * Returns the class name, used for auto loading libraries
  * @param $className
  */
-function dxf_autoloader($className) {
+function dxf_autoloader($className)
+{
   echo $className;
 }
 
 /**
  * Handle class auto loading from lib folder
  */
-spl_autoload_register(function($class) {
+spl_autoload_register(function ($class) {
   $class = str_replace('DXFighter\\lib\\', 'lib/', $class);
   if (file_exists($class . '.php')) {
     require_once $class . '.php';
@@ -52,7 +54,8 @@ spl_autoload_register(function($class) {
  * Class DXFighter
  * @package DXFighter
  */
-class DXFighter {
+class DXFighter
+{
   protected $sections;
   protected $header;
   protected $classes;
@@ -68,7 +71,8 @@ class DXFighter {
    *
    * @param string|bool $readPath
    */
-  function __construct($readPath = false) {
+  function __construct($readPath = false)
+  {
     $this->sections = array(
       'header',
       'classes',
@@ -91,7 +95,8 @@ class DXFighter {
    * Private function, called while constructing a new object of this class.
    * As DXF files have to fit certain requirements we need all these basic items.
    */
-  private function addBasicObjects() {
+  private function addBasicObjects()
+  {
     $this->header->addItem(new SystemVariable("acadver", array(1 => "AC1012")));
     $this->header->addItem(new SystemVariable("dwgcodepage", array(3 => "ANSI_1252")));
     $this->header->addItem(new SystemVariable("insbase", array('point' => array(0, 0, 0))));
@@ -105,8 +110,8 @@ class DXFighter {
     }
     $tables['appid']->addEntry(new AppID('ACAD'));
 
-    $this->addBlock($tables, '*model_space');
-    $this->addBlock($tables, '*paper_space');
+    $this->addBlock('*model_space');
+    $this->addBlock('*paper_space');
 
     $tables['layer']->addEntry(new Layer('0'));
 
@@ -121,12 +126,28 @@ class DXFighter {
 
   /**
    * Handler for adding block entities to the DXF file
-   * @param $tables
    * @param $name
    */
-  public function addBlock(&$tables, $name) {
-    $tables['block_record']->addEntry(new BlockRecord($name));
-    $this->blocks->addItem(new Block($name));
+  public function addBlock($name)
+  {
+
+    // find the tables Section
+    $tablesSection = $this->tables->getItems();
+
+    foreach ($tablesSection as $table) {
+      //loop through the section to find the block_record table
+      if ($table->getName() == 'block_record') {
+
+        // add the new block_record
+        $table->addEntry(new BlockRecord($name));
+      }
+    }
+
+    // add the new block to the blocks section
+    $block = new Block($name);
+    $this->blocks->addItem($block);
+
+    return $block;
   }
 
   /**
@@ -134,18 +155,18 @@ class DXFighter {
    * @param Layer $layer
    */
   //TODO perhaps abstract this into a more general addBasicObject function?
-  public function addLayer(Layer $layer) {
+  public function addLayer(Layer $layer)
+  {
 
     // find the tables Section
     $tablesSection = $this->tables->getItems();
 
-    foreach($tablesSection as $table){
+    foreach ($tablesSection as $table) {
       //loop through the section to find the layer table
-      if($table->getName() == 'layer'){
+      if ($table->getName() == 'layer') {
         // add the new layer
         $table->addEntry($layer);
       }
-
     }
     //dd($tablesSection);
   }
@@ -154,7 +175,8 @@ class DXFighter {
    * Handler to add an entity to the DXFighter instance
    * @param $entity
    */
-  public function addEntity($entity) {
+  public function addEntity($entity)
+  {
     $this->entities->addItem($entity);
   }
 
@@ -162,8 +184,9 @@ class DXFighter {
    * Handler to add multiple entities to the DXFighter instance
    * @param $entities array
    */
-  public function addMultipleEntities($entities) {
-    foreach($entities as $entity) {
+  public function addMultipleEntities($entities)
+  {
+    foreach ($entities as $entity) {
       $this->entities->addItem($entity);
     }
   }
@@ -174,11 +197,13 @@ class DXFighter {
    * @param array $move Vector to move all entities with
    * @param int $rotate a degree value to rotate all entities with
    */
-  public function addEntitiesFromFile($path, $move = [0,0,0], $rotate = 0) {
+  public function addEntitiesFromFile($path, $move = [0, 0, 0], $rotate = 0)
+  {
     $this->read($path, $move, $rotate);
   }
 
-  public function getEntities() {
+  public function getEntities()
+  {
     return $this->entities->getItems();
   }
 
@@ -186,7 +211,8 @@ class DXFighter {
    * Public function to move all entities on a DXF File
    * @param array $move vector to move the entity with
    */
-  public function move($move) {
+  public function move($move)
+  {
     foreach ($this->entities->getItems() as $entity) {
       if (method_exists($entity, 'move')) {
         $entity->move($move);
@@ -202,7 +228,8 @@ class DXFighter {
    * @param int $rotate degree value used for the rotation
    * @param array $rotationCenter center point of the rotation
    */
-  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0))
+  {
     foreach ($this->entities->getItems() as $entity) {
       if (method_exists($entity, 'rotate')) {
         $entity->rotate($rotate, $rotationCenter);
@@ -217,7 +244,8 @@ class DXFighter {
    *
    * @return array
    */
-  public function toArray() {
+  public function toArray()
+  {
     $output = array();
     foreach ($this->sections as $section) {
       $output[strtoupper($section)] = $this->{$section}->toArray();
@@ -231,7 +259,8 @@ class DXFighter {
    * @param bool|TRUE $return
    * @return string
    */
-  public function toString($return = TRUE) {
+  public function toString($return = TRUE)
+  {
     $output = array();
     array_push($output, 999, "DXFighter");
     foreach ($this->sections as $section) {
@@ -253,18 +282,20 @@ class DXFighter {
    *
    * @param $fileName
    */
-  public function saveAs($fileName) {
+  public function saveAs($fileName)
+  {
     $fh = fopen($fileName, 'w');
     fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->toString(FALSE)));
     fclose($fh);
   }
 
-  private function read($path, $move = [0,0,0], $rotate = 0) {
+  private function read($path, $move = [0, 0, 0], $rotate = 0)
+  {
     if (!file_exists($path) || !filesize($path)) {
       throw new Exception('The path to the file is either invalid or the file is empty');
     }
     $content = file_get_contents($path);
-    $lines = preg_split ('/$\R?^/m', $content);
+    $lines = preg_split('/$\R?^/m', $content);
     $values = [];
     for ($i = 0; $i + 1 < count($lines); $i++) {
       $values[] = [
@@ -275,7 +306,8 @@ class DXFighter {
     $this->readDocument($values, $move, $rotate);
   }
 
-  private function readDocument($values, $move = [0,0,0], $rotate = 0) {
+  private function readDocument($values, $move = [0, 0, 0], $rotate = 0)
+  {
     $section_pattern = [
       'name' => '',
       'values' => [],
@@ -315,7 +347,8 @@ class DXFighter {
     }
   }
 
-  private function readHeaderSection($values) {
+  private function readHeaderSection($values)
+  {
     $variable_pattern = [
       'name' => '',
       'values' => [],
@@ -336,7 +369,7 @@ class DXFighter {
     if (!empty($variable['values'])) {
       $variables[] = $variable;
     }
-    foreach($variables as $variable) {
+    foreach ($variables as $variable) {
       $name = str_replace('$', '', $variable['name']);
       if (strtoupper($name) == 'ACADVER') {
         $variable['values'] = [1 => 'AC1012'];
@@ -345,7 +378,8 @@ class DXFighter {
     }
   }
 
-  private function readTablesSection($values) {
+  private function readTablesSection($values)
+  {
     $table = null;
     $tableName = '';
     foreach ($values as $value) {
@@ -385,7 +419,8 @@ class DXFighter {
     }
   }
 
-  private function readBlocksSection($values) {
+  private function readBlocksSection($values)
+  {
     $block = [];
     $entitiesSection = [];
 
@@ -414,7 +449,8 @@ class DXFighter {
     }
   }
 
-  private function readEntitiesSection($values, $addEntities = false, $move = [0,0,0], $rotate = 0) {
+  private function readEntitiesSection($values, $addEntities = false, $move = [0, 0, 0], $rotate = 0)
+  {
     $entities = [];
     $entityType = '';
     $data = [];
@@ -445,7 +481,7 @@ class DXFighter {
               break;
             case 20:
             case 30:
-              $data['points'][sizeof($data['points']) -1 ][$value['key']] = $value['value'];
+              $data['points'][sizeof($data['points']) - 1][$value['key']] = $value['value'];
               break;
             case 40:
               $data['knots'][] = $value['value'];
@@ -470,7 +506,8 @@ class DXFighter {
     return $entities;
   }
 
-  private function addReadEntity($type, $data, $move = [0,0,0], $rotate = 0) {
+  private function addReadEntity($type, $data, $move = [0, 0, 0], $rotate = 0)
+  {
     switch ($type) {
       case 'TEXT':
         $point = [$data[10], $data[20], $data[30]];
@@ -539,16 +576,16 @@ class DXFighter {
         if (isset($data[70])) {
           $bin = decbin($data[70]);
           $length = strlen((string)$bin);
-          for($i = $length - 1; $i >= 0; $i--) {
+          for ($i = $length - 1; $i >= 0; $i--) {
             if (boolval($bin[$i])) {
               $spline->setFlag($length - 1 - $i, $bin[$i]);
             }
           }
         }
-        foreach($data['knots'] as $knot) {
+        foreach ($data['knots'] as $knot) {
           $spline->addKnot($knot);
         }
-        foreach($data['points'] as $point) {
+        foreach ($data['points'] as $point) {
           $spline->addPoint([$point[10], $point[20], $point[30]]);
         }
         return $spline;
@@ -579,13 +616,13 @@ class DXFighter {
         if (isset($data[70])) {
           $bin = decbin($data[70]);
           $length = strlen((string)$bin);
-          for($i = $length - 1; $i >= 0; $i--) {
+          for ($i = $length - 1; $i >= 0; $i--) {
             if (boolval($bin[$i])) {
               $polyline->setFlag($length - 1 - $i, $bin[$i]);
             }
           }
         }
-        foreach($data['points'] as $point) {
+        foreach ($data['points'] as $point) {
           $polyline->addPoint([$point[10], $point[20], $point[30]]);
         }
         $polyline->move($move);
@@ -595,7 +632,8 @@ class DXFighter {
     return false;
   }
 
-  private function readObjectsSection($values) {
+  private function readObjectsSection($values)
+  {
     // TODO add the actually read objects
     $this->objects->addItem(new Dictionary(array('ACAD_GROUP')));
   }
