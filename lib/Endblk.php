@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: jpietler
@@ -14,28 +15,31 @@ namespace DXFighter\lib;
  * Class Endblk
  * @package DXFighter\lib
  */
-class Endblk extends Entity {
+class Endblk extends Entity
+{
 
-  /**
-   * Endblk constructor.
-   * @param $layer
-   * @param $pointer
-   */
-  function __construct($layer, $pointer) {
-    $this->entityType = 'endblk';
-    $this->layer = $layer;
-    $this->pointer = $pointer;
-    parent::__construct();
-  }
+    /**
+     * Endblk constructor.
+     * @param $layer
+     * @param $pointer
+     */
+    function __construct($layer, $pointer)
+    {
+        $this->entityType = 'endblk';
+        $this->layer = $layer;
+        $this->pointer = $pointer;
+        parent::__construct();
+    }
 
-  /**
-   * Public function to render an entity, returns a string representation of
-   * the entity.
-   * @return string
-   */
-  public function render() {
-    $output = parent::render();
-    array_push($output, 100, 'AcDbBlockEnd');
-    return implode(PHP_EOL, $output);
-  }
+    /**
+     * Public function to render an entity, returns a string representation of
+     * the entity.
+     * @return string
+     */
+    public function render()
+    {
+        $output = parent::render();
+        array_push($output, 100, 'AcDbBlockEnd');
+        return implode(PHP_EOL, $output);
+    }
 }
