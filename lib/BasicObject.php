@@ -40,14 +40,20 @@ class BasicObject
         return $this->handle;
     }
 
+    /**
+     * Returns name if possible, or handle if name is not set
+     *
+     * @return string
+     */
     public function getName()
     {
-        //return name if possible, fallback to handle if name is not set
         return isset($this->name) ? $this->name : $this->getHandle();
     }
 
     /**
-     * @param $id
+     * Function to convert an ID to it's hexadecimal handle
+     *
+     * @param int $id
      * @return string
      */
     public function idToHex($id)
@@ -56,6 +62,8 @@ class BasicObject
     }
 
     /**
+     * Creates a new unique ID
+     *
      * @return int
      */
     public function getUniqueID()

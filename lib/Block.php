@@ -24,10 +24,12 @@ class Block extends Entity
     protected $entities = [];
 
     /**
-     * Block constructor.
-     * @param $name
+     * Block constructor
+     *
+     * @param string $name
+     * @param string $pointer
      */
-    function __construct($name, $pointer = 0)
+    function __construct(string $name, string $pointer = null)
     {
         $this->entityType = 'block';
         $this->name = $name;

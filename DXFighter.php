@@ -22,6 +22,7 @@ use DXFighter\lib\AppID,
     DXFighter\lib\Style,
     DXFighter\lib\SystemVariable,
     DXFighter\lib\Table;
+use DXFighter\lib\Entity;
 use DXFighter\lib\Ellipse;
 use DXFighter\lib\Insert;
 use DXFighter\lib\Line;
@@ -126,9 +127,9 @@ class DXFighter
 
     /**
      * Handler for creating and linking new blocks and block_records
-     * @param $name
+     * @param string $name
      */
-    public function createBlock($name)
+    public function createBlock(string $name)
     {
         // find the tables Section
         $tablesSection = $this->tables->getItems();
@@ -155,8 +156,9 @@ class DXFighter
 
     /**
      * Handler for inserting block entities into the DXF file
-     * @param $name
-     * @param $position
+     * @param string $name
+     * @param array $position
+     * @param float $rotationAngle
      */
     public function insertBlock(
         string $name,
@@ -211,18 +213,18 @@ class DXFighter
 
     /**
      * Handler to add an entity to the DXFighter instance
-     * @param $entity
+     * @param Entity $entity
      */
-    public function addEntity($entity)
+    public function addEntity(Entity $entity)
     {
         $this->entities->addItem($entity);
     }
 
     /**
      * Handler to add multiple entities to the DXFighter instance
-     * @param $entities array
+     * @param array $entities
      */
-    public function addMultipleEntities($entities)
+    public function addMultipleEntities(array $entities)
     {
         foreach ($entities as $entity) {
             $this->entities->addItem($entity);
@@ -318,9 +320,9 @@ class DXFighter
     /**
      * Save the DXF to a specific place
      *
-     * @param $fileName
+     * @param string $fileName
      */
-    public function saveAs($fileName)
+    public function saveAs(string $fileName)
     {
         $fh = fopen($fileName, 'w');
         fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->toString(FALSE)));

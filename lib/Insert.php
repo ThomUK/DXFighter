@@ -23,8 +23,10 @@ class Insert extends Entity
 
     /**
      * Insert constructor.
-     * @param $name
-     * @param $point
+     * @param string $pointer Pointer to the block_record's handle
+     * @param string $name
+     * @param array $point
+     * @param float $rotationAngle
      */
     function __construct(
         $pointer,
