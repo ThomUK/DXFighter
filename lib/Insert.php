@@ -23,11 +23,14 @@ class Insert extends Entity {
    * @param $name
    * @param $point
    */
-  function __construct($name, $point = [0, 0, 0]) {
+    function __construct($pointer, $name, $point = [0, 0, 0])
+    {
+        parent::__construct();
     $this->entityType = 'insert';
+        $this->pointer = $pointer;
+        $this->point = $point;
     $this->name = $name;
-    $this->point = $point;
-    parent::__construct();
+        var_dump($name);
   }
 
   /**
