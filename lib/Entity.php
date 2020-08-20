@@ -135,7 +135,7 @@ class Entity extends BasicObject {
     $output = array();
     array_push($output, 0, strtoupper($this->entityType));
     array_push($output, 5, $this->getHandle());
-    array_push($output, 330, $this->idToHex($this->pointer));
+        array_push($output, 330, $this->pointer);
     array_push($output, 100, 'AcDbEntity');
     array_push($output, 67, $this->paperSpace);
     array_push($output, 8, $this->layer);
