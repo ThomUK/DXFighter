@@ -158,8 +158,11 @@ class DXFighter
      * @param $name
      * @param $position
      */
-    public function insertBlock($name, $position = [0, 0, 0])
-    {
+    public function insertBlock(
+        string $name,
+        array $position = [0, 0, 0],
+        float $rotationAngle = 0
+    ) {
 
         //find the handle of the appropriate block record
         // find the tables Section
@@ -176,7 +179,7 @@ class DXFighter
 
                     if ($entry->getName() == $name) {
                         $blockRecordHandle = $entry->getHandle();
-                        $insert = new Insert($blockRecordHandle, $name, $position);
+                        $insert = new Insert($blockRecordHandle, $name, $position, $rotationAngle);
                         $this->addEntity($insert);
                         return;
                     }

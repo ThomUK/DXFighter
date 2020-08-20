@@ -19,19 +19,25 @@ class Insert extends Entity
 {
     protected $name;
     protected $point;
+    protected $rotationAngle;
 
     /**
      * Insert constructor.
      * @param $name
      * @param $point
      */
-    function __construct($pointer, $name, $point = [0, 0, 0])
-    {
+    function __construct(
+        $pointer,
+        $name,
+        $point = [0, 0, 0],
+        $rotationAngle = 0
+    ) {
         parent::__construct();
         $this->entityType = 'insert';
         $this->pointer = $pointer;
         $this->point = $point;
         $this->name = $name;
+        $this->rotationAngle = $rotationAngle;
         var_dump($name);
     }
 
@@ -55,6 +61,7 @@ class Insert extends Entity
         array_push($output, 100, 'AcDbBlockReference');
         array_push($output, 2, strtoupper($this->name));
         array_push($output, $this->point($this->point));
+        array_push($output, 50, $this->rotationAngle);
         return implode(PHP_EOL, $output);
     }
 }
