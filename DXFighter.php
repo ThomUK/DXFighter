@@ -110,9 +110,6 @@ class DXFighter
     }
     $tables['appid']->addEntry(new AppID('ACAD'));
 
-    $this->addBlock('*model_space');
-    $this->addBlock('*paper_space');
-
     $tables['layer']->addEntry(new Layer('0'));
 
     $tables['ltype']->addEntry(new LType('byblock'));
@@ -121,16 +118,18 @@ class DXFighter
     $tables['style']->addEntry(new Style('standard'));
     $this->tables->addMultipleItems($tables);
 
+        $this->createBlock('*model_space');
+        $this->createBlock('*paper_space');
+
     $this->objects->addItem(new Dictionary(array('ACAD_GROUP')));
   }
 
   /**
-   * Handler for adding block entities to the DXF file
+     * Handler for creating and linking new blocks and block_records
    * @param $name
    */
-  public function addBlock($name)
+    public function createBlock($name)
   {
-
     // find the tables Section
     $tablesSection = $this->tables->getItems();
 
@@ -138,13 +137,17 @@ class DXFighter
       //loop through the section to find the block_record table
       if ($table->getName() == 'block_record') {
 
-        // add the new block_record
-        $table->addEntry(new BlockRecord($name));
+                // add the new block_record and get it's handle
+                $blockRecord = new BlockRecord($name);
+                $blockRecordHandle = $blockRecord->getHandle();
+
+                $table->addEntry($blockRecord);
       }
     }
 
     // add the new block to the blocks section
-    $block = new Block($name);
+        // including the pointer to the block record handle
+        $block = new Block($name, $blockRecordHandle);
     $this->blocks->addItem($block);
 
     return $block;
