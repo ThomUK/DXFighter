@@ -40,7 +40,6 @@ class Insert extends Entity
         $this->point = $point;
         $this->name = $name;
         $this->rotationAngle = $rotationAngle;
-        var_dump($name);
     }
 
     /**
