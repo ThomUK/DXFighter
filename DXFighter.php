@@ -204,11 +204,31 @@ class DXFighter
         foreach ($tablesSection as $table) {
             //loop through the section to find the layer table
             if ($table->getName() == 'layer') {
+
+                //do a type check
+                if (!($layer instanceof Layer)) {
+
+                    new \Exception(
+                        $layer . ', which was passed in as a layer is not an instance of the Layer class.'
+                    );
+                }
+
                 // add the new layer
                 $table->addEntry($layer);
             }
         }
-        //dd($tablesSection);
+    }
+
+    /**
+     * Add multiple layers to the DXF file
+     * @param array $layers
+     */
+    public function addLayers(array $layers)
+    {
+        foreach ($layers as $layer) {
+
+            $this->addLayer($layer);
+        }
     }
 
     /**
