@@ -53,7 +53,7 @@ class Layer extends BasicObject
         array_push($output, 5, $this->getHandle());
         array_push($output, 100, "AcDbSymbolTableRecord");
         array_push($output, 100, "AcDbLayerTableRecord");
-        array_push($output, 2, strtoupper($this->name));
+        array_push($output, 2, $this->name);
         array_push($output, 70, $this->flag);
         array_push($output, 62, $this->color);
         array_push($output, 6, $this->lineType);
