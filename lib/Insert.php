@@ -52,6 +52,17 @@ class Insert extends Entity
     }
 
     /**
+     * Rotate blocks (via INSERT points) around the given rotation center
+     * @param $rotate
+     * @param array $rotationCenter
+     */
+    public function rotate($rotate, $rotationCenter = array(0, 0, 0))
+    {
+        $this->rotatePoint($this->point, $rotationCenter, deg2rad($rotate));
+        $this->rotationAngle += $rotate;
+    }
+
+    /**
      * Public function to render an entity, returns a string representation of
      * the entity.
      * @return string
